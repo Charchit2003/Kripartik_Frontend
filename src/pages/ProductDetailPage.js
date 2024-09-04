@@ -1,5 +1,5 @@
 import NavBar from "../features/navbar/Navbar";
-import ProductDetail from "../features/product-list/component/ProductDetail";
+import ProductDetail from "../features/product/component/ProductDetail";
 
 function ProductDetailPage() {
     return ( 
