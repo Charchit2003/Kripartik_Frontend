@@ -75,13 +75,15 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-const products = [
+
+
+const old_products = [
   {
     id: 1,
     name: 'Basic Tee',
     href: '#',
-    imageSrc: 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg',
-    imageAlt: "Front of men's Basic Tee in black.",
+    thumbnail: 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg',
+    title: "Front of men's Basic Tee in black.",
     price: '$35',
     color: 'Black',
   },
@@ -89,8 +91,8 @@ const products = [
     id: 2,
     name: 'Basic Tee',
     href: '#',
-    imageSrc: 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg',
-    imageAlt: "Front of men's Basic Tee in black.",
+    thumbnail: 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg',
+    title: "Front of men's Basic Tee in black.",
     price: '$35',
     color: 'Black',
   },
@@ -98,13 +100,14 @@ const products = [
     id: 3,
     name: 'Basic Tee',
     href: '#',
-    imageSrc: 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg',
-    imageAlt: "Front of men's Basic Tee in black.",
+    thumbnail: 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg',
+    title: "Front of men's Basic Tee in black.",
     price: '$35',
     color: 'Black',
   },
   // More products...
 ]
+
 
 
 export default function ProductList() {
@@ -113,6 +116,7 @@ export default function ProductList() {
   const [incrementAmount, setIncrementAmount] = useState('2');
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
   const incrementValue = Number(incrementAmount) || 0;
+  const products = useSelector(state=>state.product.products)
 
   return (
     <div>
@@ -298,8 +302,8 @@ export default function ProductList() {
                           <div key={product.id} className="group relative">
                             <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
                               <img
-                                alt={product.imageAlt}
-                                src={product.imageSrc}
+                                alt={product.title}
+                                src={product.thumbnail}
                                 className="h-full w-full object-cover object-center lg:h-full lg:w-full"
                               />
                             </div>
