@@ -1,9 +1,12 @@
 import React, { useState, Fragment, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
-  fetchAllProductsAsync,
+  fetchBrandsAsync,
+  fetchCategoriesAsync,
   fetchProductsByFiltersAsync,
   selectAllProducts,
+  selectBrands,
+  selectCategories,
   selectTotalItems,
 } from '../productSlice';
 import { Dialog, Disclosure, Menu, Transition } from '@headlessui/react';
@@ -29,95 +32,6 @@ const sortOptions = [
   { name: 'Price: High to Low', sort: 'price', order: 'desc', current: false },
 ];
 
-const filters = [
-  {
-    id: 'category',
-    name: 'Category',
-    options: [
-      {value: 'beauty', label: 'beauty', checked: false},
-      {value: 'fragrances', label: 'fragrances', checked: false},
-      {value: 'furniture', label: 'furniture', checked: false},
-      {value: 'groceries', label: 'groceries', checked: false},
-    ],
-  },
-  {
-    id: 'brand',
-    name: 'Brands',
-    options: [
-        {
-            "value": "Essence",
-            "label": "Essence",
-            "checked": false
-        },
-        {
-            "value": "Glamour Beauty",
-            "label": "Glamour Beauty",
-            "checked": false
-        },
-        {
-            "value": "Velvet Touch",
-            "label": "Velvet Touch",
-            "checked": false
-        },
-        {
-            "value": "Chic Cosmetics",
-            "label": "Chic Cosmetics",
-            "checked": false
-        },
-        {
-            "value": "Nail Couture",
-            "label": "Nail Couture",
-            "checked": false
-        },
-        {
-            "value": "Calvin Klein",
-            "label": "Calvin Klein",
-            "checked": false
-        },
-        {
-            "value": "Chanel",
-            "label": "Chanel",
-            "checked": false
-        },
-        {
-            "value": "Dior",
-            "label": "Dior",
-            "checked": false
-        },
-        {
-            "value": "Dolce & Gabbana",
-            "label": "Dolce & Gabbana",
-            "checked": false
-        },
-        {
-            "value": "Gucci",
-            "label": "Gucci",
-            "checked": false
-        },
-        {
-            "value": "Annibale Colombo",
-            "label": "Annibale Colombo",
-            "checked": false
-        },
-        {
-            "value": "Furniture Co.",
-            "label": "Furniture Co.",
-            "checked": false
-        },
-        {
-            "value": "Knoll",
-            "label": "Knoll",
-            "checked": false
-        },
-        {
-            "value": "Bath Trends",
-            "label": "Bath Trends",
-            "checked": false
-        }
-    ],
-  },
-];
-
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
 }
@@ -125,7 +39,21 @@ function classNames(...classes) {
 export default function ProductList() {
   const dispatch = useDispatch();
   const products = useSelector(selectAllProducts);
+  const brands = useSelector(selectBrands);
+  const categories = useSelector(selectCategories);
   const totalItems = useSelector(selectTotalItems);
+  const filters = [
+    {
+      id: 'category',
+      name: 'Category',
+      options: categories,
+    },
+    {
+      id: 'brand',
+      name: 'Brands',
+      options: brands,
+    },
+  ];
 
   const [filter, setFilter] = useState({});
   const [sort, setSort] = useState({});
@@ -163,6 +91,7 @@ export default function ProductList() {
     setPage(page);
   };
 
+
   useEffect(() => {
     const pagination = { _page: page, _per_page: ITEMS_PER_PAGE };
     dispatch(fetchProductsByFiltersAsync({ filter, sort, pagination }));
@@ -172,109 +101,118 @@ export default function ProductList() {
     setPage(1)
   },[totalItems,sort])
 
+  useEffect(() => {
+    dispatch(fetchBrandsAsync());
+    dispatch(fetchCategoriesAsync());
+  }, []);
+
   return (
     <div className="bg-white">
-      <div>
-        <MobileFilter
-          handleFilter={handleFilter}
-          mobileFiltersOpen={mobileFiltersOpen}
-          setMobileFiltersOpen={setMobileFiltersOpen}
-        ></MobileFilter>
+    <div>
+      <MobileFilter
+        handleFilter={handleFilter}
+        mobileFiltersOpen={mobileFiltersOpen}
+        setMobileFiltersOpen={setMobileFiltersOpen}
+        filters={filters}
+      ></MobileFilter>
 
-        <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex items-baseline justify-between border-b border-gray-200 pb-6 pt-24">
-            <h1 className="text-4xl font-bold tracking-tight text-gray-900">
-              All Products
-            </h1>
+      <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="flex items-baseline justify-between border-b border-gray-200 pb-6 pt-24">
+          <h1 className="text-4xl font-bold tracking-tight text-gray-900">
+            All Products
+          </h1>
 
-            <div className="flex items-center">
-              <Menu as="div" className="relative inline-block text-left">
-                <div>
-                  <Menu.Button className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
-                    Sort
-                    <ChevronDownIcon
-                      className="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
-                      aria-hidden="true"
-                    />
-                  </Menu.Button>
-                </div>
-
-                <Transition
-                  as={Fragment}
-                  enter="transition ease-out duration-100"
-                  enterFrom="transform opacity-0 scale-95"
-                  enterTo="transform opacity-100 scale-100"
-                  leave="transition ease-in duration-75"
-                  leaveFrom="transform opacity-100 scale-100"
-                  leaveTo="transform opacity-0 scale-95"
-                >
-                  <Menu.Items className="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none">
-                    <div className="py-1">
-                      {sortOptions.map((option) => (
-                        <Menu.Item key={option.name}>
-                          {({ active }) => (
-                            <p
-                              onClick={(e) => handleSort(e, option)}
-                              className={classNames(
-                                option.current
-                                  ? 'font-medium text-gray-900'
-                                  : 'text-gray-500',
-                                active ? 'bg-gray-100' : '',
-                                'block px-4 py-2 text-sm'
-                              )}
-                            >
-                              {option.name}
-                            </p>
-                          )}
-                        </Menu.Item>
-                      ))}
-                    </div>
-                  </Menu.Items>
-                </Transition>
-              </Menu>
-
-              <button
-                type="button"
-                className="-m-2 ml-5 p-2 text-gray-400 hover:text-gray-500 sm:ml-7"
-              >
-                <span className="sr-only">View grid</span>
-                <Squares2X2Icon className="h-5 w-5" aria-hidden="true" />
-              </button>
-              <button
-                type="button"
-                className="-m-2 ml-4 p-2 text-gray-400 hover:text-gray-500 sm:ml-6 lg:hidden"
-                onClick={() => setMobileFiltersOpen(true)}
-              >
-                <span className="sr-only">Filters</span>
-                <FunnelIcon className="h-5 w-5" aria-hidden="true" />
-              </button>
-            </div>
-          </div>
-
-          <section aria-labelledby="products-heading" className="pb-24 pt-6">
-            <h2 id="products-heading" className="sr-only">
-              Products
-            </h2>
-
-            <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
-              <DesktopFilter handleFilter={handleFilter}></DesktopFilter>
-              {/* Product grid */}
-              <div className="lg:col-span-3">
-                <ProductGrid products={products}></ProductGrid>
+          <div className="flex items-center">
+            <Menu as="div" className="relative inline-block text-left">
+              <div>
+                <Menu.Button className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
+                  Sort
+                  <ChevronDownIcon
+                    className="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
+                    aria-hidden="true"
+                  />
+                </Menu.Button>
               </div>
-              {/* Product grid end */}
-            </div>
-          </section>
 
-          {/* section of product and filters ends */}
-          <Pagination
-            page={page}
-            setPage={setPage}
-            handlePage={handlePage}
-            totalItems={totalItems}
-          ></Pagination>
-        </main>
-      </div>
+              <Transition
+                as={Fragment}
+                enter="transition ease-out duration-100"
+                enterFrom="transform opacity-0 scale-95"
+                enterTo="transform opacity-100 scale-100"
+                leave="transition ease-in duration-75"
+                leaveFrom="transform opacity-100 scale-100"
+                leaveTo="transform opacity-0 scale-95"
+              >
+                <Menu.Items className="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none">
+                  <div className="py-1">
+                    {sortOptions.map((option) => (
+                      <Menu.Item key={option.name}>
+                        {({ active }) => (
+                          <p
+                            onClick={(e) => handleSort(e, option)}
+                            className={classNames(
+                              option.current
+                                ? 'font-medium text-gray-900'
+                                : 'text-gray-500',
+                              active ? 'bg-gray-100' : '',
+                              'block px-4 py-2 text-sm'
+                            )}
+                          >
+                            {option.name}
+                          </p>
+                        )}
+                      </Menu.Item>
+                    ))}
+                  </div>
+                </Menu.Items>
+              </Transition>
+            </Menu>
+
+            <button
+              type="button"
+              className="-m-2 ml-5 p-2 text-gray-400 hover:text-gray-500 sm:ml-7"
+            >
+              <span className="sr-only">View grid</span>
+              <Squares2X2Icon className="h-5 w-5" aria-hidden="true" />
+            </button>
+            <button
+              type="button"
+              className="-m-2 ml-4 p-2 text-gray-400 hover:text-gray-500 sm:ml-6 lg:hidden"
+              onClick={() => setMobileFiltersOpen(true)}
+            >
+              <span className="sr-only">Filters</span>
+              <FunnelIcon className="h-5 w-5" aria-hidden="true" />
+            </button>
+          </div>
+        </div>
+
+        <section aria-labelledby="products-heading" className="pb-24 pt-6">
+          <h2 id="products-heading" className="sr-only">
+            Products
+          </h2>
+
+          <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
+            <DesktopFilter
+              handleFilter={handleFilter}
+              filters={filters}
+            ></DesktopFilter>
+            {/* Product grid */}
+            <div className="lg:col-span-3">
+              <ProductGrid products={products}></ProductGrid>
+            </div>
+            {/* Product grid end */}
+          </div>
+        </section>
+
+        {/* section of product and filters ends */}
+        <Pagination
+          page={page}
+          setPage={setPage}
+          handlePage={handlePage}
+          totalItems={totalItems}
+        ></Pagination>
+      </main>
+    </div>
     </div>
   );
 }
@@ -283,8 +221,9 @@ function MobileFilter({
   mobileFiltersOpen,
   setMobileFiltersOpen,
   handleFilter,
+  filters,
 }) {
-  return (
+return (
     <Transition.Root show={mobileFiltersOpen} as={Fragment}>
       <Dialog
         as="div"
@@ -397,7 +336,7 @@ function MobileFilter({
   );
 }
 
-function DesktopFilter({ handleFilter }) {
+function DesktopFilter({ handleFilter, filters }) {
   return (
     <form className="hidden lg:block">
       {filters.map((section) => (
@@ -454,21 +393,22 @@ function DesktopFilter({ handleFilter }) {
 }
 
 function Pagination({ page, setPage, handlePage, totalItems }) {
+const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
   return (
     <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
       <div className="flex flex-1 justify-between sm:hidden">
-        <a
-          href="#"
+        <div
+          onClick={(e) => handlePage(page > 1 ? page - 1 : page)}
           className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
         >
           Previous
-        </a>
-        <a
-          href="#"
+        </div>
+        <div
+          onClick={(e) => handlePage(page < totalPages ? page + 1 : page)}
           className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
         >
           Next
-        </a>
+        </div>
       </div>
       <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
         <div>
@@ -491,17 +431,16 @@ function Pagination({ page, setPage, handlePage, totalItems }) {
             className="isolate inline-flex -space-x-px rounded-md shadow-sm"
             aria-label="Pagination"
           >
-            <a
-              href="#"
+            <div
+              onClick={(e) => handlePage(page > 1 ? page - 1 : page)}
               className="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
             >
-              <span className="sr-only">Previous</span>
+            <span className="sr-only">Previous</span>
               <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
-            </a>
+            </div>
             {/* Current: "z-10 bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600", Default: "text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-offset-0" */}
 
-            {Array.from({ length: Math.ceil(totalItems / ITEMS_PER_PAGE) }).map(
-              (el, index) => (
+          {Array.from({ length: totalPages }).map((el, index) => (
                 <div
                   onClick={(e) => handlePage(index + 1)}
                   aria-current="page"
@@ -513,16 +452,15 @@ function Pagination({ page, setPage, handlePage, totalItems }) {
                 >
                   {index + 1}
                 </div>
-              )
-            )}
+              ))}
 
-            <a
-              href="#"
+            <div
+              onClick={(e) => handlePage(page < totalPages ? page + 1 : page)}
               className="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
             >
               <span className="sr-only">Next</span>
               <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
-            </a>
+            </div>
           </nav>
         </div>
       </div>
