@@ -1797,6 +1797,6 @@ const products = [
     }
   ]
 
-const brands =  [...new Set([...products.map(p=>p.category)])]
+const brands = [...new Set(products.map(p => p.brand).filter(Boolean))]
 
 brands.map(c=>({value:c, label:c.split('-').join(' '),checked:false}))

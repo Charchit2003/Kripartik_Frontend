@@ -4,7 +4,6 @@ import SignupPage from './pages/SignupPage';
 import CartPage from './pages/CartPage';
 import Checkout from './pages/Checkout';
 import ProductDetail from  './pages/ProductDetailPage'
-import './App.css';
 
 
 import {
