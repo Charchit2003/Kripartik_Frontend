@@ -21,8 +21,15 @@ import AdminHome from './pages/AdminHome';
 import AdminProductDetailPage from './pages/AdminProductDetailPage';
 import AdminProductFormPage from './pages/AdminProductFormPage';
 import AdminOrdersPage from './pages/AdminOrdersPage';
+import { positions, Provider } from "react-alert";
+import AlertTemplate from "react-alert-template-basic";
 
 import { createBrowserRouter, Link, RouterProvider } from 'react-router-dom';
+
+const options = {
+  timeout: 5000,
+  position: positions.BOTTOM_CENTER
+};
 
 const router = createBrowserRouter([
   {
@@ -159,8 +166,10 @@ function App() {
       <div className="App">
         {/* <SignupPage></SignupPage> */}
       
+        <Provider template={AlertTemplate} {...options}>
         {/* Dynamic Routing */}
-        <RouterProvider router={router} />
+          <RouterProvider router={router} />
+        </Provider>
         {/* Link must be inside the Provider */}
       </div>
     </>
