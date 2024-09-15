@@ -1,30 +1,30 @@
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { positions, Provider } from "react-alert";
+import AlertTemplate from "react-alert-template-basic";
+import { createBrowserRouter, Link, RouterProvider } from 'react-router-dom';
 import Home from './pages/Home';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import CartPage from './pages/CartPage';
 import Checkout from './pages/Checkout';
 import ProductDetail from  './pages/ProductDetailPage'
-import Protected from './features/auth/components/Protected';
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectLoggedInUser } from './features/auth/authSlice';
-import { fetchItemsByUserIdAsync } from './features/cart/cartSlice';
-import PageNotFound from './pages/404';
 import OrderSuccessPage from './pages/OrderSuccessPage';
 import UserOrdersPage from './pages/UserOrdersPage';
 import UserProfilePage from './pages/UserProfilePage';
-import { fetchLoggedInUserAsync } from './features/user/userSlice';
-import Logout from './features/auth/components/Logout';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
-import ProtectedAdmin from './features/auth/components/ProtectedAdmin';
+import PageNotFound from './pages/404';
 import AdminHome from './pages/AdminHome';
 import AdminProductDetailPage from './pages/AdminProductDetailPage';
 import AdminProductFormPage from './pages/AdminProductFormPage';
 import AdminOrdersPage from './pages/AdminOrdersPage';
-import { positions, Provider } from "react-alert";
-import AlertTemplate from "react-alert-template-basic";
+import Logout from './features/auth/components/Logout';
+import { selectLoggedInUser } from './features/auth/authSlice';
+import { fetchItemsByUserIdAsync } from './features/cart/cartSlice';
+import { fetchLoggedInUserAsync } from './features/user/userSlice';
+import Protected from './features/auth/components/Protected';
+import ProtectedAdmin from './features/auth/components/ProtectedAdmin';
 
-import { createBrowserRouter, Link, RouterProvider } from 'react-router-dom';
 
 const options = {
   timeout: 5000,
@@ -81,7 +81,9 @@ const router = createBrowserRouter([
   {
     path: '/order-success/:id',
     element: (
-      <OrderSuccessPage></OrderSuccessPage>
+      <Protected>
+        <OrderSuccessPage></OrderSuccessPage>{' '}
+      </Protected>
     ),
   },
   {

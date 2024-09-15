@@ -39,8 +39,8 @@ export function createOrder(order) {
         'http://localhost:8080/orders?' + queryString
       );
       const data = await response.json();
-      // const totalOrders = await response.headers.get('X-Total-Count');
-      const totalOrders = data.items
+      const totalOrders = await response.headers.get('X-Total-Count');
+      // const totalOrders = data.items
       resolve({ data: { orders: data, totalOrders: +totalOrders } });
     });
   }

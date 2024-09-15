@@ -414,7 +414,7 @@ function ProductGrid({ products, status }) {
               visible={true}
             />
           ) : null}
-          {products.data?.map((product) => (
+          {products.map((product) => (
             <Link to={`/product-detail/${product.id}`} key={product.id}>
               <div className="group relative border-solid border-2 p-2 border-gray-200">
                 <div className="min-h-60 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-60">
@@ -422,7 +422,7 @@ function ProductGrid({ products, status }) {
                     src={product.thumbnail}
                     alt={product.title}
                     className="h-full w-full object-cover object-center lg:h-full lg:w-full"
-                  />
+                    />
                 </div>
                 <div className="mt-4 flex justify-between">
                   <div>
