@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 export default function Counter() {
 
-  const incrementValue = Number(incrementAmount) || 0;
+  const incrementValue =0;
 
   return (
     <div>

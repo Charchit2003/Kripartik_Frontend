@@ -19,7 +19,7 @@ import AdminProductDetailPage from './pages/AdminProductDetailPage';
 import AdminProductFormPage from './pages/AdminProductFormPage';
 import AdminOrdersPage from './pages/AdminOrdersPage';
 import Logout from './features/auth/components/Logout';
-import { selectLoggedInUser } from './features/auth/authSlice';
+import { checkAuthAsync, selectLoggedInUser, selectUserChecked } from './features/auth/authSlice';
 import { fetchItemsByUserIdAsync } from './features/cart/cartSlice';
 import { fetchLoggedInUserAsync } from './features/user/userSlice';
 import Protected from './features/auth/components/Protected';
@@ -155,11 +155,17 @@ const router = createBrowserRouter([
 function App() {
   const dispatch = useDispatch();
   const user = useSelector(selectLoggedInUser);
+  const userChecked = useSelector(selectUserChecked);
+  
+  useEffect(()=>{
+    dispatch(checkAuthAsync())
+  },[dispatch])
 
   useEffect(() => {
     if (user) {
-      dispatch(fetchItemsByUserIdAsync(user.id));
-      dispatch(fetchLoggedInUserAsync(user.id));
+      dispatch(fetchItemsByUserIdAsync());
+      // we can get req.user by token on backend so no need to give in front-end
+     dispatch(fetchLoggedInUserAsync());
     }
   },[dispatch, user]);
   
@@ -168,10 +174,10 @@ function App() {
       <div className="App">
         {/* <SignupPage></SignupPage> */}
       
-        <Provider template={AlertTemplate} {...options}>
+        { userChecked && <Provider template={AlertTemplate} {...options}>
         {/* Dynamic Routing */}
           <RouterProvider router={router} />
-        </Provider>
+        </Provider>}
         {/* Link must be inside the Provider */}
       </div>
     </>
