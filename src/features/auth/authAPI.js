@@ -1,3 +1,4 @@
+
 export function createUser(userData) {
   return new Promise(async (resolve) => {
     const response = await fetch('http://localhost:8080/auth/signup', {
@@ -24,18 +25,15 @@ export function loginUser(loginInfo) {
         resolve({ data });
       } else {
         const error = await response.text();
+        console.log("HELlo");
         reject(error);
       }
-    }catch(error){
-      reject(error);
+    } catch (error) {
+      console.log("HELlsdjflsdjflo");
+      reject( error );
     }
+
     // TODO: on server it will only return some info of user (not password)
-  });
-}
-export function signOut(userId) {
-  return new Promise(async (resolve) => {
-    // TODO: on server we will remove user session info
-    resolve({ data: 'success' });
   });
 }
 
@@ -53,6 +51,15 @@ export function checkAuth() {
     } catch (error) {
       reject( error );
     }
+
     // TODO: on server it will only return some info of user (not password)
+  });
+}
+
+
+export function signOut(userId) {
+  return new Promise(async (resolve) => {
+    // TODO: on server we will remove user session info
+    resolve({ data: 'success' });
   });
 }
