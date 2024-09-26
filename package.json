@@ -1,6 +1,7 @@
 {
   "name": "kripartik",
   "version": "0.1.0",
+  "proxy":"http://localhost:8080",
   "private": true,
   "dependencies": {
     "@headlessui/react": "^2.1.4",
