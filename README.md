@@ -1,6 +1,8 @@
-# Kripartik MERN Stack E-commerce Project - Frontend Repository
+# Kripartik MERN E-commerce Project - Frontend Rep
 
 MERN E-Commerce with Admin Panel, Redux Toolkit, Stripe Payment, Cloud Deployment, Email Invoice, and many features (complete features given below in Description )
+
+🔥 Kripartik is Live at [Link] - https://kripartik.vercel.app/
 
 🔥 Code Repositories:
 - React [frontend] -  https://github.com/Charchit2003/Kripartik_Frontend
