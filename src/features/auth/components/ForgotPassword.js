@@ -32,7 +32,7 @@ export default function ForgotPassword() {
           <form
             noValidate
             onSubmit={handleSubmit((data) => {
-                console.log(data);
+
                 dispatch(resetPasswordRequestAsync(data.email))
                 // TODO : implementation on backend with email
             })}

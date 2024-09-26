@@ -25,11 +25,9 @@ export function loginUser(loginInfo) {
         resolve({ data });
       } else {
         const error = await response.text();
-        console.log("HELlo");
         reject(error);
       }
     } catch (error) {
-      console.log("HELlsdjflsdjflo");
       reject( error );
     }
 

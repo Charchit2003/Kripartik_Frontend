@@ -6,7 +6,6 @@ import { useForm } from 'react-hook-form';
 export default function UserProfile() {
   const dispatch = useDispatch();
   const userInfo = useSelector(selectUserInfo);
-  console.log(userInfo);
   const [selectedEditIndex, setSelectedEditIndex] = useState(-1);
   const [showAddAddressForm, setShowAddAddressForm] = useState(false);
 
@@ -83,7 +82,6 @@ export default function UserProfile() {
               className="bg-white px-5 py-12 mt-12"
               noValidate
               onSubmit={handleSubmit((data) => {
-                console.log(data);
                 handleAdd(data);
                 reset();
               })}
@@ -279,7 +277,7 @@ export default function UserProfile() {
                   className="bg-white px-5 py-12 mt-12"
                   noValidate
                   onSubmit={handleSubmit((data) => {
-                    console.log(data);
+
                     handleEdit(data, index);
                     reset();
                   })}
